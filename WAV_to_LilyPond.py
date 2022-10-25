@@ -20,7 +20,7 @@ from itertools import groupby
 
 TEMPERMENT = 12#12 tone vs 24+ microtonal
 TUNING = 440
-TEMPO = 155
+TEMPO = 120
 SUBDIVISIONS = 4
 ii16 = np.iinfo(np.int16)
 
@@ -127,13 +127,13 @@ class MUSIC:
             plt.plot(freq[:500], mag[:500])
             
             #isolate outlier frequencies (ignoreing harmonics!)
-            threshold = np.percentile(mag, 99)
+            threshold = np.percentile(mag, 70)
             filter1 = [d for d in fourier if (d[0] >= threshold) and (d[1] != 0)]            
 
-            threshold = np.percentile(filter1, 99)
+            threshold = np.percentile(filter1, 92)
             filter2 = [d for d in fourier if (d[0] >= threshold)]
             
-            threshold = np.percentile(filter2, 98)
+            threshold = np.percentile(filter2, 99)
             outliers = np.array([d for d in filter1 if d[0] >= threshold])
             
             #https://en.wikipedia.org/wiki/Equal_temperament
@@ -183,7 +183,7 @@ class MUSIC:
             if(len(g[0]) == 0):
                 self.notes[indx].append("r")
                 #lilypond won't tie or imply a rest, we have to respecify
-                self.rhythms[indx].replace("~ ", " r")
+                self.rhythms[indx] = self.rhythms[indx].replace("~ ", " r")
                 
             #scale degree to letter and octave
             for n in g[0]:
@@ -220,12 +220,12 @@ class MUSIC:
         """ % (self.file_name, SCALE_NAMES[TEMPERMENT][self.key], " ".join(self.music))
         
         #write to file
-        f = open("C:\\Users\\Daniel\\Desktop\\WAV_to_MIDI\\test.ly", "w")
+        f = open("exports\\test.ly", "w")
         f.write(output)
         f.close()
 
 #TEST 2
-V_test = MUSIC("C:\\Users\\Daniel\\Desktop\\WAV_to_MIDI\\Vontmer_Short.wav")
+V_test = MUSIC("audio_samples\Ab minor.wav")
 
 #TEST 3
 #CM_test = MUSIC("C:\\Users\\Daniel\\Desktop\\WAV_to_MIDI\\C_Major.wav")
